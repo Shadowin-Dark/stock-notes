@@ -1,3 +1,26 @@
 .main-body {
   margin: 16px 0;
+  height: 800px;
+}
+
+.title-selected {
+  width: 50%;
+  background-color: white;
+  border: dotted;
+  border-color: red;
+  color: red;
+  font-size: 24px;
+}
+
+.title {
+  width: 50%;
+  background-color: white;
+  border: dotted;
+  border-color: gray;
+  color: gray;
+  font-size: 24px;
+}
+
+.title-selected:focus {
+  outline: 0;
 }
