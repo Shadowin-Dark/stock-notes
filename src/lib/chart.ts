@@ -8,9 +8,27 @@ export const initChart = (domID: string): echarts.ECharts => {
   return echarts.init(chartDom);
 };
 
+export const unitToRawData = (item: Unit): (number | string)[] => [
+  item.open,
+  item.close,
+  item.lowest,
+  item.highest,
+  item.comments
+];
+
+// item for []echarts.OptionDataItem which is not exported
+export const optionParamsToUnit = (name: string, item: any): Unit => ({
+  date: name,
+  open: parseFloat(`${item[0]}`),
+  close: parseFloat(`${item[1]}`),
+  lowest: parseFloat(`${item[2]}`),
+  highest: parseFloat(`${item[3]}`),
+  comments: `${item[5]}`
+});
+
 export const buildOption = (rawData: Unit[]): EChartsOption => {
   const dates = rawData.map((item: Unit) => item.date);
-  const data = rawData.map((item: Unit) => [item.open, item.close, item.lowest, item.highest]);
+  const data = rawData.map((item: Unit) => unitToRawData(item));
   return {
     tooltip: {
       trigger: 'axis',
@@ -42,21 +60,14 @@ export const buildOption = (rawData: Unit[]): EChartsOption => {
         textStyle: {
           color: '#8392A5'
         },
-        handleIcon:
-          'path://M10.7,11.9v-1.3H9.3v1.3c-4.9,0.3-8.8,4.4-8.8,9.4c0,5,3.9,9.1,8.8,9.4v1.3h1.3v-1.3c4.9-0.3,8.8-4.4,8.8-9.4C19.5,16.3,15.6,12.2,10.7,11.9z M13.3,24.4H6.7V23h6.6V24.4z M13.3,19.6H6.7v-1.4h6.6V19.6z',
         dataBackground: {
-          areaStyle: {
-            color: '#8392A5'
-          },
           lineStyle: {
             opacity: 0.8,
             color: '#8392A5'
           }
         },
+        rangeMode: ['value', 'percent'],
         brushSelect: true
-      },
-      {
-        type: 'inside'
       }
     ],
     series: [

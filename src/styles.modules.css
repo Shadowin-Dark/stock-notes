@@ -24,3 +24,16 @@
 .title-selected:focus {
   outline: 0;
 }
+
+.date-range {
+  width: 25%;
+  background-color: white;
+  border: solid 1px;
+  border-color: gray;
+  color: gray;
+  font-size: 18px;
+}
+
+.date-range:focus {
+  outline: 0;
+}
