@@ -8,7 +8,7 @@ export const initChart = (domID: string): echarts.ECharts => {
   return echarts.init(chartDom);
 };
 
-export const unitToRawData = (item: Unit): (number | string)[] => [
+export const unitToRawData = (item: Unit): (string | number)[] => [
   item.open,
   item.close,
   item.lowest,
@@ -26,9 +26,23 @@ export const optionParamsToUnit = (name: string, item: any): Unit => ({
   comments: `${item[5]}`
 });
 
-export const buildOption = (rawData: Unit[]): EChartsOption => {
-  const dates = rawData.map((item: Unit) => item.date);
-  const data = rawData.map((item: Unit) => unitToRawData(item));
+export const buildOption = (rawData: Unit[][]): EChartsOption => {
+  const dates = rawData[0].map((item: Unit) => item.date);
+  const records: any[] = rawData.map((items: Unit[]) =>
+    items.map((item: Unit) => unitToRawData(item))
+  );
+  const series: echarts.SeriesOption[] = records.map(data => ({
+    type: 'candlestick',
+    name: 'Day',
+    data,
+    itemStyle: {
+      color: '#FD1050',
+      color0: '#0CF49B',
+      borderColor: '#FD1050',
+      borderColor0: '#0CF49B'
+    }
+  }));
+
   return {
     tooltip: {
       trigger: 'axis',
@@ -70,18 +84,6 @@ export const buildOption = (rawData: Unit[]): EChartsOption => {
         brushSelect: true
       }
     ],
-    series: [
-      {
-        type: 'candlestick',
-        name: 'Day',
-        data,
-        itemStyle: {
-          color: '#FD1050',
-          color0: '#0CF49B',
-          borderColor: '#FD1050',
-          borderColor0: '#0CF49B'
-        }
-      }
-    ]
+    series
   };
 };

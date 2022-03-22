@@ -42,7 +42,7 @@ const setDefaultRange = (chart: echarts.ECharts, rangeUnit: 'ALL' | 'YEAR' | 'MO
 };
 
 export const AppPanel = React.memo(() => {
-  const [panel, setPanel] = useState<'A' | 'B'>(null);
+  const [panel, setPanel] = useState<[boolean, boolean]>([false, false]);
   const [myChart, setMyChart] = useState<echarts.ECharts>(null);
   const [focused, setFocused] = useState<Unit>(null);
 
@@ -55,34 +55,37 @@ export const AppPanel = React.memo(() => {
   }, []);
 
   useEffect(() => {
-    if (panel === 'A') {
+    if (panel[0] && panel[1]) {
       myChart.clear();
-      myChart.setOption(buildOption(loadData('A')));
-    } else if (panel === 'B') {
+      myChart.setOption(buildOption([loadData('A'), loadData('B')]));
+    } else if (panel[0]) {
       myChart.clear();
-      myChart.setOption(buildOption(loadData('A')));
+      myChart.setOption(buildOption([loadData('A')]));
+    } else if (panel[1]) {
+      myChart.clear();
+      myChart.setOption(buildOption([loadData('B')]));
     }
-  }, [panel]);
+  }, [panel[0], panel[1]]);
 
   return (
     <div>
       <button
         type="button"
-        className={panel === 'A' ? styles.titleSelected : styles.title}
+        className={panel[0] ? styles.titleSelected : styles.title}
         onClick={() => {
-          setPanel('A');
+          setPanel([!panel[0], panel[1]]);
         }}
       >
-        A
+        上证指数[000001]
       </button>
       <button
         type="button"
-        className={panel === 'B' ? styles.titleSelected : styles.title}
+        className={panel[1] ? styles.titleSelected : styles.title}
         onClick={() => {
-          setPanel('B');
+          setPanel([panel[0], !panel[1]]);
         }}
       >
-        B
+        深证成指[399001]
       </button>
       <button
         type="button"
